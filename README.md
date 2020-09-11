@@ -1,4 +1,4 @@
-# flutter_algo_anim_app
+# flutter_firebase_app
 
 A new Flutter application.
 

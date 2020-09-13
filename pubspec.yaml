@@ -46,6 +46,12 @@ flutter:
 
   assets:
     - assets/images/bg.jpg
+  fonts:
+    - family: Comfortaa
+      fonts:
+        - asset: assets/fonts/comfortaa_medium.ttf
+        - asset: assets/fonts/comfortaa_light.ttf
+          style: italic
 
   # To add assets to your application, add an assets section, like this:
   # assets:

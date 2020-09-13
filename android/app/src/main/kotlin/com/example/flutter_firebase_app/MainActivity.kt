@@ -1,4 +1,4 @@
-package com.example.flutter_algo_anim_app
+package com.example.flutter_firebase_app
 
 import io.flutter.embedding.android.FlutterActivity
 

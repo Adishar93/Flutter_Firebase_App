@@ -1,41 +1,227 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.amber,
-        cursorColor: Colors.amber,
-        fontFamily: 'Comfortaa',
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'Money Transaction'),
+    return FutureBuilder(
+      // Initialize FlutterFire:
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              // This is the theme of your application.
+              //
+              // Try running your application with "flutter run". You'll see the
+              // application has a blue toolbar. Then, without quitting the app, try
+              // changing the primarySwatch below to Colors.green and then invoke
+              // "hot reload" (press "r" in the console where you ran "flutter run",
+              // or simply save your changes to "hot reload" in a Flutter IDE).
+              // Notice that the counter didn't reset back to zero; the application
+              // is not restarted.
+              primarySwatch: Colors.amber,
+              cursorColor: Colors.amber,
+              fontFamily: 'Comfortaa',
+              // This makes the visual density adapt to the platform that you run
+              // the app on. For desktop platforms, the controls will be smaller and
+              // closer together (more dense) than on mobile platforms.
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: ErrorPage(title: 'Money Transaction'),
+          );
+
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              // This is the theme of your application.
+              //
+              // Try running your application with "flutter run". You'll see the
+              // application has a blue toolbar. Then, without quitting the app, try
+              // changing the primarySwatch below to Colors.green and then invoke
+              // "hot reload" (press "r" in the console where you ran "flutter run",
+              // or simply save your changes to "hot reload" in a Flutter IDE).
+              // Notice that the counter didn't reset back to zero; the application
+              // is not restarted.
+              primarySwatch: Colors.amber,
+              cursorColor: Colors.amber,
+              fontFamily: 'Comfortaa',
+              // This makes the visual density adapt to the platform that you run
+              // the app on. For desktop platforms, the controls will be smaller and
+              // closer together (more dense) than on mobile platforms.
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: MyHomePage(title: 'Money Transaction'),
+          );
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            // This is the theme of your application.
+            //
+            // Try running your application with "flutter run". You'll see the
+            // application has a blue toolbar. Then, without quitting the app, try
+            // changing the primarySwatch below to Colors.green and then invoke
+            // "hot reload" (press "r" in the console where you ran "flutter run",
+            // or simply save your changes to "hot reload" in a Flutter IDE).
+            // Notice that the counter didn't reset back to zero; the application
+            // is not restarted.
+            primarySwatch: Colors.amber,
+            cursorColor: Colors.amber,
+            fontFamily: 'Comfortaa',
+            // This makes the visual density adapt to the platform that you run
+            // the app on. For desktop platforms, the controls will be smaller and
+            // closer together (more dense) than on mobile platforms.
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: LoadingPage(title: 'Money Transaction'),
+        );
+      },
     );
+
   }
 }
+
+ProgressDialog _initialLoading;
+
+class LoadingPage extends StatefulWidget {
+
+  LoadingPage({Key key, this.title}) : super(key: key);
+  final String title;
+
+  @override
+  _LoadingPageState createState() => _LoadingPageState();
+
+}
+
+class _LoadingPageState extends State<LoadingPage>{
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) =>
+      initializeProgressDialog()
+
+    );
+  }
+
+  void initializeProgressDialog()
+  {
+    _initialLoading=ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
+    _initialLoading.style(
+        borderRadius: 10.0,
+        padding: EdgeInsets.all(25),
+        backgroundColor: Colors.white,
+        progressWidget: CircularProgressIndicator(),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600)
+    );
+
+    _initialLoading.show();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
+      ),
+      resizeToAvoidBottomPadding: false,
+
+      body:Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/bg.jpg"),
+              fit: BoxFit.fill
+          ),
+        ),
+
+      ),
+
+    );
+  }
+  
+}
+
+class ErrorPage extends StatefulWidget {
+
+  ErrorPage({Key key, this.title}) : super(key: key);
+  final String title;
+
+  @override
+  _ErrorPageState createState() => _ErrorPageState();
+
+}
+
+class _ErrorPageState extends State<ErrorPage>{
+
+
+  @override
+  Widget build(BuildContext context) {
+    if(_initialLoading!=null)
+      {
+        _initialLoading.hide();
+      }
+
+    return Scaffold(
+      appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
+      ),
+      resizeToAvoidBottomPadding: false,
+
+      body:
+        Container(
+          width:double.infinity,
+          height: double.infinity,
+          child: Center(
+            child:Text("Sorry! Firebase Error Occured!",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            ),),
+          ),
+        )
+
+
+    );
+  }
+
+}
+
 
 class MyHomePage extends StatefulWidget {
 
@@ -48,8 +234,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+
   bool _obscure=true;
   final _loginFormKey = GlobalKey<FormState>();
+
+  final emailController = TextEditingController();
+  final passController = TextEditingController();
+
 
   void _toggleObscure()
   {
@@ -62,6 +254,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if(_initialLoading!=null)
+    {
+      _initialLoading.hide();
+    }
+
     return Scaffold(
 
         appBar: AppBar(
@@ -128,6 +325,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                             return "Enter a valid email address";
                                           }
                                         },
+                                        controller: emailController,
+
                                         decoration: InputDecoration(
                                           icon: Icon(
                                               Icons.mail,
@@ -167,6 +366,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         style: TextStyle(
                                             fontSize: 20
                                         ),
+                                        controller: passController,
                                         validator: (input){
                                          if(input.length<6)
                                            {
@@ -211,14 +411,67 @@ class _MyHomePageState extends State<MyHomePage> {
                                     height: 45,
                                     textColor: Colors.white,
                                     color: Colors.amber,
-                                    onPressed: () {
+                                    onPressed: () async{
+                                      FocusScope.of(context).requestFocus(new FocusNode());
                                       if (_loginFormKey.currentState.validate()) {
                                         // If the form is valid, display a snackbar. In the real world,
                                         // you'd often call a server or save the information in a database.
 
-                                        Scaffold
-                                            .of(context)
-                                            .showSnackBar(SnackBar(content: Text('Form Validated Successfully!'),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                        ProgressDialog loging_in=ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
+                                        loging_in.style(
+                                          message: ' Loging In',
+                                            borderRadius: 10.0,
+                                            progressWidget: CircularProgressIndicator(),
+                                            padding: EdgeInsets.all(25),
+                                            backgroundColor: Colors.white,
+                                            elevation: 10.0,
+                                            insetAnimCurve: Curves.easeInOut,
+
+                                            messageTextStyle: TextStyle(
+                                                color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600)
+                                        );
+
+                                        loging_in.show();
+                                        // Scaffold
+                                        //     .of(context)
+                                        //     .showSnackBar(SnackBar(content: Text('Form Validated Successfully!'),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+
+                                        try {
+                                          //final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+                                          UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                              email: emailController.text,
+                                              password: passController.text
+                                           );
+                                          loging_in.hide();
+                                          Scaffold
+                                              .of(context)
+                                              .showSnackBar(SnackBar(content: Text("Signed In Successfully!"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                        } on FirebaseAuthException catch (e) {
+                                          if (e.code == 'user-not-found') {
+                                            loging_in.hide();
+
+                                            Scaffold
+                                                .of(context)
+                                                .showSnackBar(SnackBar(content: Text("Email Address not registered"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                            //print('No user found for that email.');
+                                          } else if (e.code == 'wrong-password') {
+                                            loging_in.hide();
+
+                                            Scaffold
+                                                .of(context)
+                                                .showSnackBar(SnackBar(content: Text("Wrong password"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                            //print('Wrong password provided for that user.');
+                                          }
+                                          else
+                                            {
+                                              loging_in.hide();
+
+                                              Scaffold
+                                                  .of(context)
+                                                  .showSnackBar(SnackBar(content: Text("Unexpected error occured!"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                              //print('Firebase Error'+e.toString());
+                                            }
+                                        }
                                       }
                                       else{
                                         Scaffold

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "707544142849",
+    "firebase_url": "https://moneytransactionappflutter.firebaseio.com",
+    "project_id": "moneytransactionappflutter",
+    "storage_bucket": "moneytransactionappflutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:707544142849:android:c8a9cf2733edbf54905c00",
+        "android_client_info": {
+          "package_name": "com.example.flutter_firebase_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "707544142849-8t03er5ffkqk9jk5femmmal3fb080bj0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXLL5emjDFjud_aKQNDkMuJKDe_NO2d5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "707544142849-8t03er5ffkqk9jk5femmmal3fb080bj0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

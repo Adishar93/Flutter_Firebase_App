@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_algo_anim_app/register.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 void main() {
@@ -406,7 +407,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                   ),
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(30, 30, 30, 50),
+                                  padding: EdgeInsets.fromLTRB(30, 30, 30, 30),
                                   child:MaterialButton(
                                     height: 45,
                                     textColor: Colors.white,
@@ -487,6 +488,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                     )),
                                   )
                                 ),
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
+                                    child:FlatButton(
+                                      textColor: Color(0xFFcc7a00),
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage(title:"Money transaction")));
+                                        // Respond to button press
+                                      },
+                                      child: Text("Click Here to Register",
+                                      style:TextStyle(
+                                        fontSize: 15
+                                      )),
+                                    )
+                                  )
 
                                 ]
                             ),
@@ -494,7 +509,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
                       )
-                  )
+                  ),
+
 
               )
 

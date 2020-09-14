@@ -410,24 +410,24 @@ class _RegisterPageState extends State<RegisterPage> {
                                                         password: passController.text,
                                                     );
                                                     registering_loading.hide();
-                                                    Scaffold
-                                                        .of(context)
-                                                        .showSnackBar(SnackBar(content: Text("Registered Successfully!"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
-                                                    Navigator.pop(context);
+
+                                                    Navigator.pop(context,"Registered Successfully");
                                                   } on FirebaseAuthException catch (e) {
                                                     if (e.code == 'weak-password') {
                                                       registering_loading.hide();
 
                                                       Scaffold
                                                           .of(context)
-                                                          .showSnackBar(SnackBar(content: Text("The password provided is too weak."),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                                      ..removeCurrentSnackBar()
+                                                          ..showSnackBar(SnackBar(content: Text("The password provided is too weak."),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
                                                       //print('No user found for that email.');
                                                     } else if (e.code == 'email-already-in-use') {
                                                       registering_loading.hide();
 
                                                       Scaffold
                                                           .of(context)
-                                                          .showSnackBar(SnackBar(content: Text("The account already exists for that email."),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                                      ..removeCurrentSnackBar()
+                                                          ..showSnackBar(SnackBar(content: Text("The account already exists for that email."),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
                                                       //print('Wrong password provided for that user.');
                                                     }
                                                     else
@@ -436,7 +436,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                                       Scaffold
                                                           .of(context)
-                                                          .showSnackBar(SnackBar(content: Text("Unexpected error occured!"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                                      ..removeCurrentSnackBar()
+                                                          ..showSnackBar(SnackBar(content: Text("Unexpected error occured!"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
                                                       //print('Firebase Error'+e.toString());
                                                     }
                                                   }
@@ -444,7 +445,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 else{
                                                   Scaffold
                                                       .of(context)
-                                                      .showSnackBar(SnackBar(content: Text("Errors in Form"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                                  ..removeCurrentSnackBar()
+                                                      ..showSnackBar(SnackBar(content: Text("Errors in Form"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
                                                 }
                                                 // Respond to button press
                                               },

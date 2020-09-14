@@ -446,21 +446,24 @@ class _MyHomePageState extends State<MyHomePage> {
                                           loging_in.hide();
                                           Scaffold
                                               .of(context)
-                                              .showSnackBar(SnackBar(content: Text("Signed In Successfully!"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                          ..removeCurrentSnackBar()
+                                              ..showSnackBar(SnackBar(content: Text("Signed In Successfully!"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
                                         } on FirebaseAuthException catch (e) {
                                           if (e.code == 'user-not-found') {
                                             loging_in.hide();
 
                                             Scaffold
                                                 .of(context)
-                                                .showSnackBar(SnackBar(content: Text("Email Address not registered"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                            ..removeCurrentSnackBar()
+                                                ..showSnackBar(SnackBar(content: Text("Email Address not registered"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
                                             //print('No user found for that email.');
                                           } else if (e.code == 'wrong-password') {
                                             loging_in.hide();
 
                                             Scaffold
                                                 .of(context)
-                                                .showSnackBar(SnackBar(content: Text("Wrong password"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                            ..removeCurrentSnackBar()
+                                                ..showSnackBar(SnackBar(content: Text("Wrong password"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
                                             //print('Wrong password provided for that user.');
                                           }
                                           else
@@ -469,7 +472,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                               Scaffold
                                                   .of(context)
-                                                  .showSnackBar(SnackBar(content: Text("Unexpected error occured!"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                              ..removeCurrentSnackBar()
+                                                  ..showSnackBar(SnackBar(content: Text("Unexpected error occured!"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
                                               //print('Firebase Error'+e.toString());
                                             }
                                         }
@@ -477,7 +481,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                       else{
                                         Scaffold
                                             .of(context)
-                                            .showSnackBar(SnackBar(content: Text("Errors in Form"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                        ..removeCurrentSnackBar()
+                                            ..showSnackBar(SnackBar(content: Text("Errors in Form"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
                                       }
                                       // Respond to button press
                                     },
@@ -492,8 +497,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                     padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
                                     child:FlatButton(
                                       textColor: Color(0xFFcc7a00),
-                                      onPressed: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage(title:"Money transaction")));
+                                      onPressed: () async {
+
+                                        final result = await  Navigator.of(context).push(_openRegisterCreateRoute());
+
+                                        // After the Selection Screen returns a result, hide any previous snackbars
+                                        // and show the new result.
+                                        if(result!=null) {
+                                          Scaffold.of(context)
+                                            ..removeCurrentSnackBar()
+                                            ..showSnackBar(SnackBar(
+                                                content: Text("$result"),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
+                                        }
+
                                         // Respond to button press
                                       },
                                       child: Text("Click Here to Register",
@@ -525,6 +541,27 @@ class _MyHomePageState extends State<MyHomePage> {
       //   tooltip: 'Increment',
       //   child: Icon(Icons.add_comment),
       // ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Route _openRegisterCreateRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(title:"Money Transaction"),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(1.0, 0.0);
+        var end = Offset.zero;
+        // var begin=0.0;
+        // var end=1.0;
+        var curve = Curves.ease;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          //position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 

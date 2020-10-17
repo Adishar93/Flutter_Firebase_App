@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -13,17 +12,17 @@ import 'package:progress_dialog/progress_dialog.dart';
 
 
 
-class RegisterPage extends StatefulWidget {
+class MainPage extends StatefulWidget {
 
-  RegisterPage({Key key, this.title}) : super(key: key);
+  MainPage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _MainPageState createState() => _MainPageState();
 
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _MainPageState extends State<MainPage> {
 
 
   bool _obscure=true;
@@ -410,30 +409,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                                         email: emailController.text,
                                                         password: passController.text,
                                                     );
+                                                    registering_loading.hide();
 
-
-                                                    try{
-                                                      await FirebaseDatabase.instance.reference().child("Users").child(userCredential.user.uid).set({
-                                                        "name":nameController.text,
-                                                        "email":emailController.text,
-                                                        "phone":phoneController.text,
-
-                                                      });
-
-                                                      registering_loading.hide();
-                                                      Navigator.pop(context,"Registered Successfully");
-                                                    }
-                                                    catch(e)
-                                                    {
-                                                      registering_loading.hide();
-                                                      Scaffold
-                                                          .of(context)
-                                                        ..removeCurrentSnackBar()
-                                                        ..showSnackBar(SnackBar(content: Text("Network error occured."),elevation: 20,backgroundColor: Color(0xFFcc7a00),));
-
-                                                    }
-
-
+                                                    Navigator.pop(context,"Registered Successfully");
                                                   } on FirebaseAuthException catch (e) {
                                                     if (e.code == 'weak-password') {
                                                       registering_loading.hide();
